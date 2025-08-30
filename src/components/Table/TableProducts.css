@@ -1,0 +1,33 @@
+.table-products{
+    display: flex;
+    justify-content: center;
+    text-align: center;
+
+}
+.table-products table {
+    width: 70%;
+}
+.table-products button {
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+.table-products .edit-button {
+    background-color: #108f2e; /* Verde */
+    margin-right: 10px;
+
+}
+.table-products .delete-button {
+    background-color: #ff4c4c; /* Rojo */
+
+}
+.table-products .actions-cell {
+    width: 200px;
+}
+
+.table-products td {
+    vertical-align: middle;
+}

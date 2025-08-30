@@ -1,0 +1,13 @@
+.page-container {
+    background-color: rgb(223, 222, 222);
+    min-height: 100vh;
+}
+
+.title {
+    text-align: center;
+    padding: 40px;
+}
+
+.texto-fetch {
+    text-align: center;
+}
