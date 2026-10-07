@@ -32,10 +32,11 @@ const Modal = ({ item, edited, onClose }: ModalProps) => {
 
     return (
         <div className="overlay" onMouseDown={handleOverlayMouseDown}>
-            <div className="product-modal" ref={modalRef}>
-                <button className="button-close" onClick={onClose}>
-                    ✕
-                </button>
+            <div className="product-modal surface" ref={modalRef}>
+                <div className="product-modal-header">
+                    <h2>Editar producto</h2>
+                    <button type="button" className="btn-close" aria-label="Cerrar" onClick={onClose} />
+                </div>
                 <CustomForm item={item} edited={edited} />
             </div>
         </div>

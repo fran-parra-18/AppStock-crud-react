@@ -1,40 +1,40 @@
 import { Product } from "../../models/product.model";
+import { formatCurrency } from "../../utils/format";
 import Table from 'react-bootstrap/Table';
 import './TableProducts.css'
 
 interface TableProps {
-    items: Product[] | null;
+    items: Product[];
     openModal: (item: Product) => void;
     onDelete: (item: Product) => void;
 }
 
-
 const TableProducts = ({ items, openModal, onDelete }: TableProps) => {
 
     return (
-        <div className="table-products">
-            <Table striped bordered hover >
+        <div className="table-products surface">
+            <Table hover responsive>
                 <thead>
                     <tr>
                         <th>#ID</th>
                         <th>Nombre</th>
-                        <th>Precio</th>
-                        <th>Stock</th>
-                        <th className="actions-cell">Editar/Eliminar</th>
+                        <th className="text-end">Precio</th>
+                        <th className="text-end">Stock</th>
+                        <th className="actions-cell">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {items && items.map((item) => (
+                    {items.map((item) => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
-                            <td>{item.price}</td>
-                            <td>{item.stock}</td>
-                            <td>
-                                <button className="edit-button" onClick={() => openModal(item)}>
+                            <td className="text-end">{formatCurrency(Number(item.price))}</td>
+                            <td className="text-end">{item.stock}</td>
+                            <td className="actions-cell">
+                                <button className="btn btn-sm btn-outline-primary" onClick={() => openModal(item)}>
                                     Editar
                                 </button>
-                                <button className="delete-button" onClick={() => onDelete(item)}>
+                                <button className="btn btn-sm btn-outline-danger" onClick={() => onDelete(item)}>
                                     Eliminar
                                 </button>
                             </td>

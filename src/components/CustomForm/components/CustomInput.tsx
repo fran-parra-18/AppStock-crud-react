@@ -12,7 +12,7 @@ interface Props {
 const InputForm = ({ name, control, label, type, error }: Props) => {
     return (
         <div className="input-form">
-            <label htmlFor={name}>{label}</label>
+            <label htmlFor={name} className="form-label">{label}</label>
             <Controller
                 name={name}
                 control={control}

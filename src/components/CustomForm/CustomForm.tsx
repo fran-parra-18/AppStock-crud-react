@@ -22,7 +22,7 @@ export const CustomForm = ({ item, edited }: CustomFormProps) => {
     });
 
     const { data, loading, error, fetch } = useApi(newProduct)
-    const { fetch: updateFetch } = useApi<Product, Product>(updateProduct);
+    const { loading: updating, error: updateError, fetch: updateFetch } = useApi<Product, Product>(updateProduct);
 
 
     const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -42,14 +42,17 @@ export const CustomForm = ({ item, edited }: CustomFormProps) => {
 
     return (
         <div className="form-container">
-            <form className="form" onSubmit={handleSubmit(submitFn)}>
+            <form className="form surface" onSubmit={handleSubmit(submitFn)}>
                 <InputForm name="name" control={control} label="Nombre" type="text" error={errors.name} />
                 <InputForm name="price" control={control} label="Precio" type="number" error={errors.price} />
                 <InputForm name="stock" control={control} label="Stock" type="number" error={errors.stock} />
-                <button type="submit">Enviar</button>
-                {loading && <p>Enviando...</p>}
-                {data && <p>Producto creado</p>}
-                {error && <p>Error al crear el producto</p>}
+                <button type="submit" className="btn btn-primary" disabled={loading || updating}>
+                    {item ? "Guardar cambios" : "Crear producto"}
+                </button>
+                {(loading || updating) && <p className="form-status">Guardando...</p>}
+                {data && <p className="form-status text-success">Producto creado</p>}
+                {error && <p className="form-status text-danger">Error al crear el producto</p>}
+                {updateError && <p className="form-status text-danger">Error al guardar los cambios</p>}
             </form>
         </div>
     );

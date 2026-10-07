@@ -2,10 +2,9 @@ import { useApi } from "../../hook/useApi";
 import { deleteProduct, getAllproducts } from "../../service/api.service";
 import { Product } from "../../models/product.model";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import TableProducts from "../../components/Table/TableProducts";
 import Modal from "../../components/Modal/Modal";
-
-
 
 const ShowProducts = () => {
 
@@ -15,11 +14,11 @@ const ShowProducts = () => {
     const [modalProduct, setModalProduct] = useState<Product | null>(null);
 
     useEffect(() => {
-        fetch();
+        fetch().promise.catch(() => {});
     }, [fetch]);
 
     const handleUpdate = () => {
-        fetch();
+        fetch().promise.catch(() => {});
         setModalProduct(null);
     }
 
@@ -29,17 +28,30 @@ const ShowProducts = () => {
 
     const handleDelete = (product: Product) => {
         fetchDelete(product).promise
-            .then(() => fetch())
+            .then(() => fetch().promise)
             .catch(() => {});
     }
 
-
     return (
-        <div className="show-products-container page-container">
-            <h1 className='title'>Lista de productos</h1>
-            {loading && <p className="texto-fetch">Cargando...</p>}
-            {error && <p className="texto-fetch">Error: {error.message}</p>}
-            {data && <TableProducts items={data} openModal={handleModal} onDelete={handleDelete}/>}
+        <div className="page-container">
+            <header className="page-header">
+                <h1>Productos</h1>
+                <p>Consultá, editá o eliminá los productos del inventario.</p>
+            </header>
+
+            <section className="page-content">
+                <div className="products-toolbar">
+                    <span>{data && `${data.length} productos`}</span>
+                    <Link to="/create" className="btn btn-primary">Agregar producto</Link>
+                </div>
+                {loading && <p className="texto-fetch">Cargando...</p>}
+                {error && <p className="texto-fetch">No se pudieron cargar los productos: {error.message}</p>}
+                {data && data.length === 0 && (
+                    <div className="surface texto-fetch">Todavía no hay productos cargados.</div>
+                )}
+                {data && data.length > 0 && <TableProducts items={data} openModal={handleModal} onDelete={handleDelete}/>}
+            </section>
+
             {modalProduct &&
                 <Modal
                     item={modalProduct}

@@ -1,10 +1,56 @@
-.home{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;      
+.home-hero {
+    padding: 80px 16px;
 }
 
-.home h1{
-    font-size: 100px;
+.home-hero h1 {
+    font-size: clamp(48px, 9vw, 96px);
+}
+
+.home-hero p {
+    margin: 16px auto 32px;
+    font-size: 20px;
+}
+
+.home-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.page-content h2 {
+    margin-bottom: 20px;
+}
+
+.home-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.home-stats .surface {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-stat-value {
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.home-stat-label {
+    color: #6c757d;
+}
+
+.home-low-stock ul {
+    list-style: none;
+    padding: 0;
+}
+
+.home-low-stock li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
 }
