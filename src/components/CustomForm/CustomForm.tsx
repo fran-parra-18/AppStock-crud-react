@@ -1,4 +1,5 @@
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import InputForm from "./components/CustomInput";
 import { FormValues, schema } from "./models";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -6,6 +7,7 @@ import { newProduct, updateProduct } from "../../service/api.service";
 import { emptyProduct, Product } from "../../models/product.model";
 import "./CustomeFrom.css"
 import { useApi } from "../../hook/useApi";
+import { useToast } from "../Toast/useToast";
 
 interface CustomFormProps {
     item?: Product;
@@ -15,25 +17,33 @@ interface CustomFormProps {
 
 export const CustomForm = ({ item, edited }: CustomFormProps) => {
 
-    const { control, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
+    const { control, handleSubmit, formState: { errors } } = useForm<FormValues>({
         resolver: yupResolver(schema),
         mode: "onBlur",
         defaultValues: item ?? emptyProduct
     });
 
-    const { data, loading, error, fetch } = useApi(newProduct)
+    const { loading, error, fetch } = useApi(newProduct)
     const { loading: updating, error: updateError, fetch: updateFetch } = useApi<Product, Product>(updateProduct);
+    const navigate = useNavigate();
+    const showToast = useToast();
 
 
     const onSubmit: SubmitHandler<FormValues> = (data) => {
         fetch(data).promise
-            .then(() => reset())
+            .then(() => {
+                showToast(`"${data.name}" se agregó al inventario`);
+                navigate("/products");
+            })
             .catch(() => {});
     };
 
     const onEditSubmit: SubmitHandler<FormValues> = (data) => {
         updateFetch({ ...item, ...data }).promise
-            .then(() => edited?.())
+            .then(() => {
+                showToast(`"${data.name}" se actualizó`);
+                edited?.();
+            })
             .catch(() => {});
     }
 
@@ -50,15 +60,9 @@ export const CustomForm = ({ item, edited }: CustomFormProps) => {
                     {item ? "Guardar cambios" : "Crear producto"}
                 </button>
                 {(loading || updating) && <p className="form-status">Guardando...</p>}
-                {data && <p className="form-status text-success">Producto creado</p>}
                 {error && <p className="form-status text-danger">Error al crear el producto</p>}
                 {updateError && <p className="form-status text-danger">Error al guardar los cambios</p>}
             </form>
         </div>
     );
 }
-
-
-
-
-

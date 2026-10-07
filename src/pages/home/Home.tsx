@@ -2,11 +2,9 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useApi } from '../../hook/useApi';
 import { getAllproducts } from '../../service/api.service';
-import { Product } from '../../models/product.model';
+import { LOW_STOCK, Product } from '../../models/product.model';
 import { formatCurrency } from '../../utils/format';
 import './Home.css'
-
-const LOW_STOCK = 5;
 
 export default function Home() {
     const { data, loading, error, fetch } = useApi<Product[], void>(getAllproducts);

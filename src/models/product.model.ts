@@ -5,6 +5,9 @@ export interface Product {
     stock:number;
 }
 
+// Productos con este stock o menos se consideran para reponer
+export const LOW_STOCK = 5;
+
 export const emptyProduct: Product = {
     name:"",
     price:0,

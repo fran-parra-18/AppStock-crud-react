@@ -5,13 +5,18 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import TableProducts from "../../components/Table/TableProducts";
 import Modal from "../../components/Modal/Modal";
+import ConfirmDelete from "../../components/Modal/ConfirmDelete";
+import { useToast } from "../../components/Toast/useToast";
 
 const ShowProducts = () => {
 
     const { data, loading, error, fetch } = useApi<Product[], void>(getAllproducts);
-    const { fetch : fetchDelete } = useApi<Product, Product>(deleteProduct);
+    const { loading: deleting, fetch : fetchDelete } = useApi<Product, Product>(deleteProduct);
+    const showToast = useToast();
 
     const [modalProduct, setModalProduct] = useState<Product | null>(null);
+    const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetch().promise.catch(() => {});
@@ -26,11 +31,23 @@ const ShowProducts = () => {
         setModalProduct(product);
     }
 
-    const handleDelete = (product: Product) => {
+    const handleDelete = () => {
+        if (!productToDelete) return;
+        const product = productToDelete;
         fetchDelete(product).promise
-            .then(() => fetch().promise)
-            .catch(() => {});
+            .then(() => {
+                showToast(`"${product.name}" se eliminó`);
+                setProductToDelete(null);
+                return fetch().promise;
+            })
+            .catch(() => {
+                showToast(`No se pudo eliminar "${product.name}"`, "danger");
+                setProductToDelete(null);
+            });
     }
+
+    const term = search.trim().toLowerCase();
+    const filtered = data?.filter((p) => p.name.toLowerCase().includes(term)) ?? [];
 
     return (
         <div className="page-container">
@@ -41,15 +58,28 @@ const ShowProducts = () => {
 
             <section className="page-content">
                 <div className="products-toolbar">
-                    <span>{data && `${data.length} productos`}</span>
-                    <Link to="/create" className="btn btn-primary">Agregar producto</Link>
+                    <input
+                        type="search"
+                        className="form-control products-search"
+                        placeholder="Buscar por nombre..."
+                        aria-label="Buscar por nombre"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    <span>{data && (term ? `${filtered.length} de ${data.length} productos` : `${data.length} productos`)}</span>
+                    <Link to="/create" className="btn btn-primary ms-auto">Agregar producto</Link>
                 </div>
-                {loading && <p className="texto-fetch">Cargando...</p>}
+                {loading && !data && <p className="texto-fetch">Cargando...</p>}
                 {error && <p className="texto-fetch">No se pudieron cargar los productos: {error.message}</p>}
                 {data && data.length === 0 && (
                     <div className="surface texto-fetch">Todavía no hay productos cargados.</div>
                 )}
-                {data && data.length > 0 && <TableProducts items={data} openModal={handleModal} onDelete={handleDelete}/>}
+                {data && data.length > 0 && filtered.length === 0 && (
+                    <div className="surface texto-fetch">Ningún producto coincide con "{search.trim()}".</div>
+                )}
+                {filtered.length > 0 && (
+                    <TableProducts items={filtered} openModal={handleModal} onDelete={setProductToDelete}/>
+                )}
             </section>
 
             {modalProduct &&
@@ -57,6 +87,14 @@ const ShowProducts = () => {
                     item={modalProduct}
                     edited={handleUpdate}
                     onClose={() => setModalProduct(null)}
+                />
+            }
+            {productToDelete &&
+                <ConfirmDelete
+                    item={productToDelete}
+                    deleting={deleting}
+                    onConfirm={handleDelete}
+                    onCancel={() => setProductToDelete(null)}
                 />
             }
         </div>

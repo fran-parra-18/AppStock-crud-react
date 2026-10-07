@@ -1,9 +1,14 @@
 .products-toolbar {
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
+    gap: 12px 16px;
     margin-bottom: 16px;
     color: #6c757d;
+}
+
+.products-search {
+    max-width: 280px;
 }
 
 .table-products {
@@ -16,6 +21,24 @@
 
 .table-products td {
     vertical-align: middle;
+}
+
+.table-products .sort-button {
+    border: none;
+    background: none;
+    padding: 0;
+    font-weight: inherit;
+    color: inherit;
+}
+
+.table-products .sort-icon {
+    margin-left: 6px;
+    font-size: 11px;
+    color: #6c757d;
+}
+
+.table-products .low-stock-row > td {
+    background-color: #fff8e1;
 }
 
 .table-products .actions-cell {
