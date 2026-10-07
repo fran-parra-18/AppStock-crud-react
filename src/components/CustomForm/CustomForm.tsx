@@ -5,7 +5,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { newProduct, updateProduct } from "../../service/api.service";
 import { emptyProduct, Product } from "../../models/product.model";
 import "./CustomeFrom.css"
-
 import { useApi } from "../../hook/useApi";
 
 interface CustomFormProps {
@@ -16,33 +15,26 @@ interface CustomFormProps {
 
 export const CustomForm = ({ item, edited }: CustomFormProps) => {
 
-    let initialvalues = {}
-
-    if (item) {
-        initialvalues = item;
-    } else {
-        initialvalues = emptyProduct;
-    }
-
     const { control, handleSubmit, formState: { errors }, reset } = useForm<FormValues>({
         resolver: yupResolver(schema),
         mode: "onBlur",
-        defaultValues: initialvalues
+        defaultValues: item ?? emptyProduct
     });
 
     const { data, loading, error, fetch } = useApi(newProduct)
     const { fetch: updateFetch } = useApi<Product, Product>(updateProduct);
 
 
-    const onSubmit: SubmitHandler<FormValues> = async (data) => {
-        fetch(data)
-        reset();
+    const onSubmit: SubmitHandler<FormValues> = (data) => {
+        fetch(data).promise
+            .then(() => reset())
+            .catch(() => {});
     };
 
-    const onEditSubmit: SubmitHandler<FormValues> = async (data) => {
-        updateFetch(data).promise.then(() => {
-        edited?.();
-        })
+    const onEditSubmit: SubmitHandler<FormValues> = (data) => {
+        updateFetch({ ...item, ...data }).promise
+            .then(() => edited?.())
+            .catch(() => {});
     }
 
 

@@ -1,6 +1,6 @@
 import { useApi } from "../../hook/useApi";
 import { deleteProduct, getAllproducts } from "../../service/api.service";
-import { emptyProduct, Product } from "../../models/product.model";
+import { Product } from "../../models/product.model";
 import { useEffect, useState } from "react";
 import TableProducts from "../../components/Table/TableProducts";
 import Modal from "../../components/Modal/Modal";
@@ -12,8 +12,7 @@ const ShowProducts = () => {
     const { data, loading, error, fetch } = useApi<Product[], void>(getAllproducts);
     const { fetch : fetchDelete } = useApi<Product, Product>(deleteProduct);
 
-    const [modal, setModal] = useState(false);
-    const [modalProduct, setModalProduct] = useState<Product>(emptyProduct);
+    const [modalProduct, setModalProduct] = useState<Product | null>(null);
 
     useEffect(() => {
         fetch();
@@ -21,18 +20,17 @@ const ShowProducts = () => {
 
     const handleUpdate = () => {
         fetch();
-        setModal(false);
+        setModalProduct(null);
     }
 
     const handleModal = (product: Product) => {
-        setModal(true);
         setModalProduct(product);
     }
 
     const handleDelete = (product: Product) => {
-        fetchDelete(product).promise.then(() => {
-            fetch();
-        });
+        fetchDelete(product).promise
+            .then(() => fetch())
+            .catch(() => {});
     }
 
 
@@ -42,11 +40,11 @@ const ShowProducts = () => {
             {loading && <p className="texto-fetch">Cargando...</p>}
             {error && <p className="texto-fetch">Error: {error.message}</p>}
             {data && <TableProducts items={data} openModal={handleModal} onDelete={handleDelete}/>}
-            {modal && modalProduct &&
+            {modalProduct &&
                 <Modal
                     item={modalProduct}
                     edited={handleUpdate}
-                    onClose={() => setModal(false)}
+                    onClose={() => setModalProduct(null)}
                 />
             }
         </div>

@@ -8,9 +8,12 @@ The project focuses on form handling, validation and product management while ap
 
 * ➕ Create products
 * 📋 View product inventory
-* ✏️ Update existing products
-* 🗑️ Delete products
-* 🔎 Product management interface
+* ✏️ Update existing products from a modal
+* 🗑️ Delete products with a confirmation dialog
+* 📊 Home dashboard with inventory summary (products, units, total value)
+* ⚠️ Low-stock alerts on the dashboard and in the product table
+* 🔎 Search by name, sortable columns and pagination
+* 🔔 Notifications after creating, editing or deleting a product
 * ✅ Form validation
 * 🔢 Numeric field validation
 * 📱 Responsive UI
@@ -18,12 +21,13 @@ The project focuses on form handling, validation and product management while ap
 
 ## 🛠️ Tech Stack
 
-* React
-* JavaScript
-* React Hook Form
-* Form validation
-* CSS
+* React 19
+* TypeScript
 * Vite
+* React Router
+* React Hook Form + Yup
+* React Bootstrap
+* Axios (REST API on MockAPI)
 
 ## 🔄 CRUD Operations
 
@@ -40,26 +44,32 @@ This provides a simple interface for managing an inventory of products.
 
 ## 📝 Form Handling
 
-Product forms are handled using React Hook Form.
+Product forms are handled using React Hook Form with a Yup validation schema.
 
 Validation prevents invalid information from being submitted and provides feedback when form fields do not satisfy the expected requirements.
 
 Special attention is given to numeric inputs to prevent invalid product values from being stored.
+
+## 🗺️ Routes
+
+```text
+/           → Home dashboard
+/products   → Product list (search, sort, edit, delete)
+/create     → Create a new product
+```
 
 ## 🏗️ Application Structure
 
 The application follows a component-based React architecture.
 
 ```text
-React Application
-│
-├── Product Form
-│
-├── Product List
-│
-├── Product Components
-│
-└── Validation Logic
+src/
+├── components/   # CustomForm, Modal, Navbar, TableProducts, Toast
+├── hook/         # useApi: generic hook for API calls
+├── models/       # Product and API call types
+├── pages/        # Home, ShowProducts, CreateProducts
+├── service/      # Axios instance and CRUD endpoints
+└── utils/        # Formatting helpers
 ```
 
 Separating these responsibilities makes the application easier to maintain and extend.
@@ -68,7 +78,7 @@ Separating these responsibilities makes the application easier to maintain and e
 
 ### Requirements
 
-* Node.js
+* Node.js 20+
 * npm
 
 Clone the repository:
@@ -92,6 +102,16 @@ npm run dev
 
 Then open the local URL displayed in the terminal.
 
+Other scripts:
+
+* `npm run build` → type-check and build for production into `dist/`
+* `npm run preview` → serve the production build locally
+* `npm run lint` → run ESLint
+
+## ☁️ Deployment
+
+The project includes a `vercel.json` that rewrites every route to `index.html`, so React Router works when reloading or opening `/products` or `/create` directly. Vercel detects Vite automatically (build: `npm run build`, output: `dist`).
+
 ## 🎯 What I Practiced
 
 This project helped me practice:
@@ -110,12 +130,9 @@ This project helped me practice:
 
 Future improvements could include:
 
-* REST API integration
-* Persistent database storage
+* Persistent database storage with a custom backend
 * Authentication
 * Product categories
-* Search and advanced filters
-* Stock alerts
 * Automated tests
 
 ## 👨‍💻 Author
