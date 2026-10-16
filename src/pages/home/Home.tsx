@@ -23,7 +23,7 @@ export default function Home() {
     const stats = [
         { label: 'Productos', value: products.length },
         { label: 'Unidades en stock', value: totalUnits },
-        { label: 'Valor del inventario', value: formatCurrency(totalValue) },
+        { label: 'Valor del inventario', value: formatCurrency(totalValue, 0) },
         { label: `Con stock bajo (≤ ${LOW_STOCK})`, value: lowStock.length },
     ];
 

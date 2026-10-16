@@ -32,11 +32,16 @@
 .home-stats .surface {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .home-stat-value {
-    font-size: 32px;
+    font-size: clamp(24px, 2.6vw, 32px);
     font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .home-stat-label {
